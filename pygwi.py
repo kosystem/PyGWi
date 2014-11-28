@@ -23,6 +23,7 @@ from flask.ext.misaka import Misaka
 import os
 from docopt import docopt
 import git
+import time
 
 md = Misaka(autolink=True,
             fenced_code=True,
@@ -41,6 +42,10 @@ path = '.'
 repo = 0
 
 
+def asctime(date):
+    return time.asctime(time.gmtime(date))
+
+
 @app.route('/')
 def index():
     return redirect(url_for('contentView', name='home'))
@@ -53,9 +58,17 @@ def newView():
 
 @app.route('/<path:name>/add', methods=['POST'])
 def add_entry(name):
-    f = open(os.path.join(path, name+'.md'), 'w')
+    filename = name+'.md'
+    f = open(os.path.join(path, filename), 'w')
     text = request.form.get('text')
+    text = text.replace('\r\n', '\n')
     f.write(text)
+    f.close()
+    repo.index.add([filename])
+    if repo.index.diff(None, paths=filename, staged=True):
+        repo.index.commit('Update: '+name)
+    else:
+        print filename + ': not updated'
     return redirect(url_for('contentView', name=name))
 
 
@@ -68,9 +81,14 @@ def editView(name):
 
 @app.route('/<path:name>/history')
 def historyView(name):
-    # TODO: get log of current file
-    # TODO: decorate logs
-    # TODO: Add histroy page
+    filename = name+'.md'
+    commits = repo.iter_commits(paths=filename)
+    dates = []
+    for c in commits:
+        date = asctime(c.authored_date-c.author_tz_offset)
+        dates.append(date)
+    commits = repo.iter_commits(paths=filename)
+    # TODO: selectable history
     return render_template('history.html', **locals())
 
 
