@@ -46,6 +46,11 @@ def index():
     return redirect(url_for('contentView', name='home'))
 
 
+@app.route('/new')
+def newView():
+    return render_template('edit.html', **locals())
+
+
 @app.route('/<path:name>/add', methods=['POST'])
 def add_entry(name):
     f = open(os.path.join(path, name+'.md'), 'w')
@@ -70,7 +75,7 @@ def historyView(name):
 
 
 @app.route('/<path:name>/diff')
-def diffView(name, src, dist):
+def diffView(name):
     # TODO: get diff
     # TODO: decorate diff
     # TODO: Add diff page
