@@ -1,28 +1,37 @@
 {% extends "layout.html" %}
 {% block body %}
-<table class="table">
-    <caption>History</caption>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Comment</th>
-            <th>Autor</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for commit in commits %}
-    <tr>
-        <td>{{ dates[loop.index-1] }}</td>
-        <td>{{ commit.message }}</td>
-        <td>{{ commit.author.name }}</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td>No history.</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table> 
+<form action="{{ url_for('diffView', name=request.path[:-8]) }}" method="post" class="diff-view">
+    <fieldset>
+        <legend>History</legend>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                    <th>Autor</th>
+                    <th>SHA-1</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for commit in commits %}
+            <tr>
+                <td><input type="checkbox" name="sha-1" value="{{ commit.hexsha }}"></td>
+                <td>{{ commit.message }}</td>
+                <td>{{ dates[loop.index-1] }}</td>
+                <td>{{ commit.author.name }}</td>
+                <td>{{ commit.hexsha[:6] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>No history.</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Diff</button>
+    </fieldset>
+</form>
 {% endblock %}
 
 

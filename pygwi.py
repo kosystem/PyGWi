@@ -92,12 +92,26 @@ def historyView(name):
     return render_template('history.html', **locals())
 
 
-@app.route('/<path:name>/diff')
+@app.route('/<path:name>/diff', methods=['POST'])
 def diffView(name):
+    import difflib
+    filename = name+'.md'
+    sha1 = request.form.getlist('sha-1')
+    commit1 = repo.commit(sha1[0]).tree[filename].data_stream.read()
+    commit2 = repo.commit(sha1[1]).tree[filename].data_stream.read()
+    content = 'Diff\n\n```Diff\n'
+    for buf in difflib.unified_diff(
+            commit2.splitlines(),
+            commit1.splitlines(),
+            fromfile=sha1[0],
+            tofile=sha1[1]):
+        content += buf + '\n'
+    content += '```'
+    print content
     # TODO: get diff
     # TODO: decorate diff
     # TODO: Add diff page
-    return render_template('edit.html', **locals())
+    return render_template('diff.html', **locals())
 
 
 @app.route('/<path:name>')

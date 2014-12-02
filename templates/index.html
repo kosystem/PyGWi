@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
-    {{ content|markdown }}
+<a class="btn btn-primary" href="{{ request.path+'/edit' }}" role="button">Edit</a>
+<a class="btn btn-primary" href="{{ request.path+'/history' }}" role="button">History</a>
+{{ content|markdown }}
 {% endblock %}
-    
+

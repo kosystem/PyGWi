@@ -7,6 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/pygments.css') }}" rel="stylesheet">
 <!--[if lt IE 9]>
     <script src="{{ url_for('static', filename='js/html5shiv.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/respond.min.js') }}"></script>
@@ -31,9 +32,7 @@
                 <li><a href="/linkpage">Link</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ request.path+'/new' }}">New</a></li>
-                <li><a href="{{ request.path+'/edit' }}">Edit</a></li>
-                <li><a href="{{ request.path+'/history' }}">History</a></li>
+                <li><a href="/new">New</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container -->
