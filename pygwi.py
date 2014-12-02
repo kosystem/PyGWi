@@ -80,6 +80,7 @@ def index():
 @app.route('/new')
 def newView():
     pageList = pagelist()
+    updateList = commitList()
     # TODO: Preveiw page
     return render_template('new.html', **locals())
 
@@ -87,6 +88,7 @@ def newView():
 @app.route('/<path:name>/edit')
 def editView(name):
     pageList = pagelist()
+    updateList = commitList()
     content = open(os.path.join(path, name+'.md'), 'r').read()
     # TODO: Preveiw page
     return render_template('edit.html', **locals())
@@ -121,6 +123,7 @@ def add_entry(name):
 @app.route('/<path:name>/history')
 def historyView(name):
     pageList = pagelist()
+    updateList = commitList()
     filename = name+'.md'
     commits = commitList(filename)
     return render_template('history.html', **locals())
@@ -129,6 +132,7 @@ def historyView(name):
 @app.route('/<path:name>/diff', methods=['POST'])
 def diffView(name):
     pageList = pagelist()
+    updateList = commitList()
     import difflib
     filename = name+'.md'
     sha1 = request.form.getlist('sha-1')
@@ -149,6 +153,7 @@ def diffView(name):
 @app.route('/<path:name>')
 def contentView(name):
     pageList = pagelist()
+    updateList = commitList()
     if os.path.splitext(name)[1] != '.ico':
         content = open(os.path.join(path, name+'.md'), 'r').read()
         # TODO: Create new page when page not found
