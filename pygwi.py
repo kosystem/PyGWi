@@ -53,11 +53,28 @@ def index():
 
 @app.route('/new')
 def newView():
+    # TODO: Preveiw page
+    return render_template('new.html', **locals())
+
+
+@app.route('/<path:name>/edit')
+def editView(name):
+    content = open(os.path.join(path, name+'.md'), 'r').read()
+    # TODO: Preveiw page
     return render_template('edit.html', **locals())
 
 
 @app.route('/<path:name>/add', methods=['POST'])
 def add_entry(name):
+    commitMessage = 'Update: '+name
+    if name == 'new':
+        name = request.form.get('pagename')
+        commitMessage = 'Create: '+name
+
+    # TODO: Add commit message form
+    if request.form.get('message'):
+        commitMessage = request.form.get('message')
+
     filename = name+'.md'
     f = open(os.path.join(path, filename), 'w')
     text = request.form.get('text')
@@ -66,17 +83,10 @@ def add_entry(name):
     f.close()
     repo.index.add([filename])
     if repo.index.diff(None, paths=filename, staged=True):
-        repo.index.commit('Update: '+name)
+        repo.index.commit(commitMessage)
     else:
-        print filename + ': not updated'
+        pass
     return redirect(url_for('contentView', name=name))
-
-
-@app.route('/<path:name>/edit')
-def editView(name):
-    content = open(os.path.join(path, name+'.md'), 'r').read()
-    # TODO: Preveiw page
-    return render_template('edit.html', **locals())
 
 
 @app.route('/<path:name>/history')
@@ -88,7 +98,6 @@ def historyView(name):
         date = asctime(c.authored_date-c.author_tz_offset)
         dates.append(date)
     commits = repo.iter_commits(paths=filename)
-    # TODO: selectable history
     return render_template('history.html', **locals())
 
 
@@ -107,10 +116,6 @@ def diffView(name):
             tofile=sha1[1]):
         content += buf + '\n'
     content += '```'
-    print content
-    # TODO: get diff
-    # TODO: decorate diff
-    # TODO: Add diff page
     return render_template('diff.html', **locals())
 
 
@@ -123,8 +128,14 @@ def contentView(name):
     else:
         pass
 
+# TODO: Add Delete button
 # TODO: Login and logout page and session
-# TODO: Create layout.html
+# TODO: Side menu
+# TODO: Upload file
+# TODO: Upload by ajax
+# TODO: Update log in side menu
+# TODO: Page tree in side menu
+# TODO: Add flash message
 
 if __name__ == '__main__':
     args = docopt(__doc__, version='1.0.0')
