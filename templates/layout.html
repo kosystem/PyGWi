@@ -14,44 +14,15 @@
 <![endif]-->
 </head>
 <body>
-<!-- navigation -->
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">PyGWi</a>
-        </div><!-- /.navbar-header -->
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/linkpage">Link</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/new">New</a></li>
-                <li>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary navbar-btn">Login</button>
-                    <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Sing in</a></li>
-                    </ul>
-                </div>
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container -->
-</div><!-- /.navbar -->
+{% include "navibar.html" %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9">
             {% block body %}{% endblock %}
+        </div>
+        <div class="col-md-3">
+            {% include "pagelist.html" %}
+            {% include "recentUpdates.html" %}
         </div>
     </div>
 </div>
