@@ -46,6 +46,14 @@ def asctime(date):
     return time.asctime(time.gmtime(date))
 
 
+def pagelist():
+    lsfiles = repo.git().ls_files().splitlines()
+    files = []
+    for f in lsfiles:
+        files.append(f.replace('.md', ''))
+    return files
+
+
 @app.route('/')
 def index():
     return redirect(url_for('contentView', name='home'))
@@ -53,12 +61,14 @@ def index():
 
 @app.route('/new')
 def newView():
+    pageList = pagelist()
     # TODO: Preveiw page
     return render_template('new.html', **locals())
 
 
 @app.route('/<path:name>/edit')
 def editView(name):
+    pageList = pagelist()
     content = open(os.path.join(path, name+'.md'), 'r').read()
     # TODO: Preveiw page
     return render_template('edit.html', **locals())
@@ -69,6 +79,7 @@ def add_entry(name):
     commitMessage = 'Update: '+name
     if name == 'new':
         name = request.form.get('pagename')
+        # TODO: safe file name
         commitMessage = 'Create: '+name
 
     # TODO: Add commit message form
@@ -91,6 +102,7 @@ def add_entry(name):
 
 @app.route('/<path:name>/history')
 def historyView(name):
+    pageList = pagelist()
     filename = name+'.md'
     commits = repo.iter_commits(paths=filename)
     dates = []
@@ -103,6 +115,7 @@ def historyView(name):
 
 @app.route('/<path:name>/diff', methods=['POST'])
 def diffView(name):
+    pageList = pagelist()
     import difflib
     filename = name+'.md'
     sha1 = request.form.getlist('sha-1')
@@ -121,6 +134,7 @@ def diffView(name):
 
 @app.route('/<path:name>')
 def contentView(name):
+    pageList = pagelist()
     if os.path.splitext(name)[1] != '.ico':
         content = open(os.path.join(path, name+'.md'), 'r').read()
         # TODO: Create new page when page not found

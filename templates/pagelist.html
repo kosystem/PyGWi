@@ -10,8 +10,9 @@
         </div>
         <div id="collapseOne" class="panel-collapse collapse in">
             <div class="panel-body">
-                <li><a href="/">Home</a></li>
-                <li><a href="/linkpage">LinkPage</a></li>
+                {% for page in pageList %}
+                <li><a href="{{ page }}">{{ page }}</a></li>
+                {% endfor %}
             </div>
         </div>
     </div>
