@@ -16,11 +16,11 @@
             <tbody>
             {% for commit in commits %}
             <tr>
-                <td><input type="checkbox" name="sha-1" value="{{ commit.hexsha }}"></td>
-                <td>{{ commit.message }}</td>
-                <td>{{ dates[loop.index-1] }}</td>
-                <td>{{ commit.author.name }}</td>
-                <td>{{ commit.hexsha[:6] }}</td>
+                <td><input type="checkbox" name="sha-1" value="{{ commit['hexsha'] }}"></td>
+                <td>{{ commit['message'] }}</td>
+                <td>{{ commit['date'] }}</td>
+                <td>{{ commit['author'] }}</td>
+                <td>{{ commit['hexsha'][:6] }}</td>
             </tr>
             {% else %}
             <tr>

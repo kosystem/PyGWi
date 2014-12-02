@@ -43,7 +43,7 @@ repo = 0
 
 
 def asctime(date):
-    return time.asctime(time.gmtime(date))
+    return time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(date))
 
 
 def pagelist():
@@ -52,6 +52,24 @@ def pagelist():
     for f in lsfiles:
         files.append(f.replace('.md', ''))
     return files
+
+
+def commitList(filename=None):
+    iter_commits = repo.iter_commits(paths=filename)
+    commits = []
+    for c in iter_commits:
+        date = asctime(c.authored_date-c.author_tz_offset)
+        author = c.author.name
+        message = c.message
+        hexsha = c.hexsha
+        commit = {
+            'date': date,
+            'author': author,
+            'message': message,
+            'hexsha': hexsha
+            }
+        commits.append(commit)
+    return commits
 
 
 @app.route('/')
@@ -104,12 +122,7 @@ def add_entry(name):
 def historyView(name):
     pageList = pagelist()
     filename = name+'.md'
-    commits = repo.iter_commits(paths=filename)
-    dates = []
-    for c in commits:
-        date = asctime(c.authored_date-c.author_tz_offset)
-        dates.append(date)
-    commits = repo.iter_commits(paths=filename)
+    commits = commitList(filename)
     return render_template('history.html', **locals())
 
 
@@ -130,6 +143,7 @@ def diffView(name):
         content += buf + '\n'
     content += '```'
     return render_template('diff.html', **locals())
+    # TODO: single diff
 
 
 @app.route('/<path:name>')
