@@ -25,6 +25,7 @@ import os
 from docopt import docopt
 import git
 import time
+import codecs
 
 md = Misaka(autolink=True,
             fenced_code=True,
@@ -90,7 +91,7 @@ def newView():
 def editView(name):
     pageList = pagelist()
     updateList = commitList()
-    content = open(os.path.join(path, name+'.md'), 'r').read()
+    content = codecs.open(os.path.join(path, name+'.md'), 'r', encoding='utf-8').read()
     # TODO: Preveiw page
     return render_template('edit.html', **locals())
 
@@ -99,18 +100,20 @@ def editView(name):
 def add_entry(name):
     commitMessage = 'Update: '+name
     if name == 'new':
-        name = request.form.get('pagename')
-        name = secure_filename(name)
+        name = request.form.get('pagename').encode('utf-8')
+        # name = secure_filename(name)
+        name = name.replace('../', '')
         # TODO: safe file name
+        # TODO: dose not create directory
         commitMessage = 'Create: '+name
 
     # TODO: Add commit message form
     if request.form.get('message'):
-        commitMessage = request.form.get('message')
+        commitMessage = request.form.get('message').encode('utf-8')
 
     filename = name+'.md'
-    f = open(os.path.join(path, filename), 'w')
-    text = request.form.get('text')
+    f = codecs.open(os.path.join(path, filename), 'w', encoding='utf-8')
+    text = request.form.get('text').encode('utf-8')
     text = text.replace('\r\n', '\n')
     f.write(text)
     f.close()
@@ -157,7 +160,7 @@ def contentView(name):
     pageList = pagelist()
     updateList = commitList()
     if os.path.splitext(name)[1] != '.ico':
-        f = open(os.path.join(path, name+'.md'), 'r')
+        f = codecs.open(os.path.join(path, name+'.md'), 'r', encoding='utf-8')
         pageTitle = f.readline()
         pageTitle = pageTitle.replace('#', '')
         content = f.read()
