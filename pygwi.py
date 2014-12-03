@@ -20,6 +20,7 @@ from flask import redirect
 from flask import url_for
 from flask import request
 from flask.ext.misaka import Misaka
+from werkzeug import secure_filename
 import os
 from docopt import docopt
 import git
@@ -99,6 +100,7 @@ def add_entry(name):
     commitMessage = 'Update: '+name
     if name == 'new':
         name = request.form.get('pagename')
+        name = secure_filename(name)
         # TODO: safe file name
         commitMessage = 'Create: '+name
 
