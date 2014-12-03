@@ -3,6 +3,7 @@
 <H1 style="display:inline">{{ pageTitle }}</H1>
 <a class="btn btn-primary" href="{{ request.path+'/edit' }}" role="button" style="float:right;margin-left:3px">Edit</a>
 <a class="btn btn-primary" href="{{ request.path+'/history' }}" role="button" style="float:right;margin-left:3px">History</a>
+<hr>
 {{ content|markdown }}
 {% endblock %}
 

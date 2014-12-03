@@ -157,7 +157,10 @@ def contentView(name):
     pageList = pagelist()
     updateList = commitList()
     if os.path.splitext(name)[1] != '.ico':
-        content = open(os.path.join(path, name+'.md'), 'r').read()
+        f = open(os.path.join(path, name+'.md'), 'r')
+        pageTitle = f.readline()
+        pageTitle = pageTitle.replace('#', '')
+        content = f.read()
         # TODO: Create new page when page not found
         return render_template('index.html', **locals())
     else:
