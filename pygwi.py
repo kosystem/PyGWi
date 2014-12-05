@@ -14,12 +14,16 @@ Othres:
 
 """
 
-from flask import Flask
-from flask import render_template
-from flask import redirect
-from flask import url_for
-from flask import request
+from flask import (
+        Flask,
+        render_template,
+        redirect,
+        url_for,
+        request,
+        jsonify
+        )
 from flask.ext.misaka import Misaka
+
 from werkzeug import secure_filename
 import os
 from docopt import docopt
@@ -45,6 +49,14 @@ path = '.'
 repo = 0
 
 
+app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
 def asctime(date):
     return time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(date))
 
@@ -63,6 +75,8 @@ def commitList(filename=None):
     commits = []
     for c in iter_commits:
         date = asctime(c.authored_date-c.author_tz_offset)
+        # TODO: Chnge to jinja2 filter
+        # (http://study-flask.readthedocs.org/ja/latest/07.html)
         author = c.author.name
         message = c.message
         hexsha = c.hexsha
@@ -164,6 +178,19 @@ def diffView(name):
     content += '```'
     return render_template('diff.html', **locals())
     # TODO: single diff
+
+
+@app.route('/upload', methods=['POST'])
+def upldfile():
+    if request.method == 'POST':
+        files = request.files['file']
+        if files and allowed_file(files.filename):
+            filename = secure_filename(files.filename)
+            app.logger.info('FileName: ' + filename)
+            updir = os.path.join(path, 'upload')
+            files.save(os.path.join(updir, filename))
+            file_size = os.path.getsize(os.path.join(updir, filename))
+            return jsonify(name=filename, size=file_size)
 
 
 @app.route('/<path:name>')

@@ -10,4 +10,11 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </fieldset>
 </form>
+<form id="uploadform" method="post" enctype="multipart/form-data">
+    <label for="file">Select a file</label>
+    <input name="file" type="file">
+    <button id="submit" type="button">Upload</button>
+</form>
+<p>Result Filename:&nbsp;<span id="resultFilename"> here</span></p>
+<p>Result Filesize:&nbsp;<span id="resultFilesize">here</span></p>
 {% endblock %}
