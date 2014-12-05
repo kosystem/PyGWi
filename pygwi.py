@@ -27,6 +27,7 @@ import git
 import time
 import codecs
 
+
 md = Misaka(autolink=True,
             fenced_code=True,
             lax_html=True,
@@ -52,7 +53,8 @@ def pagelist():
     lsfiles = repo.git().ls_files().splitlines()
     files = []
     for f in lsfiles:
-        files.append(f.replace('.md', ''))
+        pagename = f.replace('.md', '').decode('utf-8')
+        files.append(pagename)
     return files
 
 
@@ -98,6 +100,7 @@ def editView(name):
 
 @app.route('/<path:name>/add', methods=['POST'])
 def add_entry(name):
+    name = name.encode('utf-8')
     commitMessage = 'Update: '+name
     if name == 'new':
         name = request.form.get('pagename').encode('utf-8')
@@ -112,14 +115,22 @@ def add_entry(name):
         commitMessage = request.form.get('message').encode('utf-8')
 
     filename = name+'.md'
-    f = codecs.open(os.path.join(path, filename), 'w', encoding='utf-8')
+    fullpath = os.path.join(path, filename)
+    try:
+        f = open(fullpath, 'w')
+    except:
+        os.makedirs(os.path.dirname(fullpath))
+        f = open(os.path.join(path, filename), 'w')
     text = request.form.get('text').encode('utf-8')
     text = text.replace('\r\n', '\n')
     f.write(text)
     f.close()
     repo.index.add([filename])
     if repo.index.diff(None, paths=filename, staged=True):
-        repo.index.commit(commitMessage)
+        try:
+            repo.index.commit(commitMessage.decode('utf-8'))
+        except UnicodeEncodeError:
+            print 'Encode error'
     else:
         pass
     return redirect(url_for('contentView', name=name))
