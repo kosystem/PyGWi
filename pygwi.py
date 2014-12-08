@@ -49,12 +49,18 @@ path = '.'
 repo = 0
 
 
-app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['ALLOWED_EXTENSIONS'] = set([
+    'txt',
+    'pdf',
+    'png',
+    'jpg',
+    'jpeg',
+    'gif'])
 
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 def asctime(date):
