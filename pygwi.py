@@ -106,6 +106,8 @@ def newView():
     pageList = pagelist()
     updateList = commitList()
     # TODO: Preveiw page
+    # TODO; redirect to edit page
+    # TODO: common architecture to edit page
     return render_template('new.html', **locals())
 
 
@@ -188,6 +190,8 @@ def diffView(name):
 
 @app.route('/upload', methods=['POST'])
 def upldfile():
+    # TODO: commit uploadete file
+    # TODO: create upload directory when not created
     if request.method == 'POST':
         files = request.files['file']
         if files and allowed_file(files.filename):
@@ -215,11 +219,9 @@ def contentView(name):
 
 # TODO: Add Delete button
 # TODO: Login and logout page and session
-# TODO: Side menu
-# TODO: Upload file
-# TODO: Upload by ajax
-# TODO: Update log in side menu
-# TODO: Page tree in side menu
+# TODO: upload file page
+# TODO: delete button in upload file page
+# TODO: disige upload button
 # TODO: Add flash message
 
 if __name__ == '__main__':
