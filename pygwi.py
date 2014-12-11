@@ -15,16 +15,15 @@ Othres:
 """
 
 from flask import (
-        Flask,
-        render_template,
-        redirect,
-        url_for,
-        request,
-        jsonify
-        )
+    Flask,
+    render_template,
+    redirect,
+    url_for,
+    request,
+    jsonify
+    )
 from flask.ext.misaka import Misaka
 
-from werkzeug import secure_filename
 import os
 from docopt import docopt
 import git
@@ -47,7 +46,7 @@ md.init_app(app)
 
 path = '.'
 repo = 0
-
+uploadDir = 'uploads'
 
 app.config['ALLOWED_EXTENSIONS'] = set([
     'txt',
@@ -76,6 +75,19 @@ def pagelist():
     return files
 
 
+def commit(repo, filename, message):
+    # commit
+    filename = filename.encode('utf-8')
+    repo.index.add([filename])
+    if repo.index.diff(None, paths=filename, staged=True):
+        try:
+            repo.index.commit(message)
+        except UnicodeEncodeError:
+            print 'Encode error'
+    else:
+        pass
+
+
 def commitList(filename=None):
     iter_commits = repo.iter_commits(paths=filename)
     commits = []
@@ -93,6 +105,9 @@ def commitList(filename=None):
             'hexsha': hexsha
             }
         commits.append(commit)
+        # di2 = r.head.commit.parents[0].diff(r.head.commit)
+        #  l = list(di2.iter_change_type('A'))
+        # l[0].b_blob.name
     return commits
 
 
@@ -115,17 +130,19 @@ def newView():
 def editView(name):
     pageList = pagelist()
     updateList = commitList()
-    content = codecs.open(os.path.join(path, name+'.md'), 'r', encoding='utf-8').read()
+    content = codecs.open(
+        os.path.join(path, name+'.md'),
+        'r',
+        encoding='utf-8').read()
     # TODO: Preveiw page
     return render_template('edit.html', **locals())
 
 
 @app.route('/<path:name>/add', methods=['POST'])
 def add_entry(name):
-    name = name.encode('utf-8')
     commitMessage = 'Update: '+name
     if name == 'new':
-        name = request.form.get('pagename').encode('utf-8')
+        name = request.form.get('pagename')
         # name = secure_filename(name)
         name = name.replace('../', '')
         # TODO: safe file name
@@ -134,7 +151,7 @@ def add_entry(name):
 
     # TODO: Add commit message form
     if request.form.get('message'):
-        commitMessage = request.form.get('message').encode('utf-8')
+        commitMessage = request.form.get('message')
 
     filename = name+'.md'
     fullpath = os.path.join(path, filename)
@@ -147,14 +164,8 @@ def add_entry(name):
     text = text.replace('\r\n', '\n')
     f.write(text)
     f.close()
-    repo.index.add([filename])
-    if repo.index.diff(None, paths=filename, staged=True):
-        try:
-            repo.index.commit(commitMessage.decode('utf-8'))
-        except UnicodeEncodeError:
-            print 'Encode error'
-    else:
-        pass
+    # git commit --------
+    commit(repo, filename, commitMessage)
     return redirect(url_for('contentView', name=name))
 
 
@@ -190,15 +201,21 @@ def diffView(name):
 
 @app.route('/upload', methods=['POST'])
 def upldfile():
-    # TODO: commit uploadete file
-    # TODO: create upload directory when not created
+    # TODO: multi byte filename
+    updir = os.path.join(path, uploadDir)
+    if not os.path.isdir(updir):
+        os.makedirs(updir)
     if request.method == 'POST':
         files = request.files['file']
+        print files.filename
         if files and allowed_file(files.filename):
-            filename = secure_filename(files.filename)
+            print files.filename
+            # filename = secure_filename(files.filename)
+            filename = files.filename.replace('../', '')
+            print filename
             app.logger.info('FileName: ' + filename)
-            updir = os.path.join(path, 'upload')
             files.save(os.path.join(updir, filename))
+            commit(repo, os.path.join(uploadDir, filename), 'Upload: %s' % filename)
             file_size = os.path.getsize(os.path.join(updir, filename))
             return jsonify(name=filename, size=file_size)
 
@@ -221,7 +238,6 @@ def contentView(name):
 # TODO: Login and logout page and session
 # TODO: upload file page
 # TODO: delete button in upload file page
-# TODO: disige upload button
 # TODO: Add flash message
 
 if __name__ == '__main__':

@@ -11,9 +11,9 @@
     </fieldset>
 </form>
 <form id="uploadform" method="post" enctype="multipart/form-data">
-    <label for="file">Select a file</label>
-    <input name="file" type="file">
-    <button id="submit" type="button">Upload</button>
+    <input id="file" name="file" type="file" style="display:none">
+    <button id="submit" type="button" class="btn btn-success" style="display:none">Upload</button>
+    <button id="fileupload" type="button" class="btn btn-success">Upload <i class="icon-plus icon-white"></i></button>
 </form>
 <p>Result Filename:&nbsp;<span id="resultFilename"> here</span></p>
 <p>Result Filesize:&nbsp;<span id="resultFilesize">here</span></p>
