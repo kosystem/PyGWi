@@ -122,10 +122,8 @@ def index():
 def newView():
     pageList = pagelist()
     updateList = commitList()
-    # TODO: Preveiw page
-    # TODO; redirect to edit page
-    # TODO: common architecture to edit page
-    return render_template('new.html', **locals())
+    newpage = True
+    return render_template('edit.html', **locals())
 
 
 @app.route('/<path:name>/edit')
@@ -137,16 +135,21 @@ def editView(name):
         'r',
         encoding='utf-8').read()
     # TODO: Preveiw page
+    # TODO: cancel button
+    # TODO: noticfy trantison page
+    newpage = False
     return render_template('edit.html', **locals())
 
 
 @app.route('/<path:name>/add', methods=['POST'])
 def add_entry(name):
-    commitMessage = 'Update: '+name
     if name == 'new':
         name = request.form.get('pagename')
         name = name.replace('../', '')
         commitMessage = 'Create: '+name
+    else:
+        name = name[:-5]
+        commitMessage = 'Update: '+name
 
     # TODO: Add commit message form
     if request.form.get('message'):
@@ -235,12 +238,17 @@ def contentView(name):
     pageList = pagelist()
     updateList = commitList()
     if os.path.splitext(name)[1] != '.ico':
-        f = codecs.open(os.path.join(path, name+'.md'), 'r', encoding='utf-8')
-        pageTitle = f.readline()
-        pageTitle = pageTitle.replace('#', '')
-        content = f.read()
-        # TODO: Create new page when page not found
-        return render_template('content.html', **locals())
+        try:
+            f = codecs.open(os.path.join(path, name+'.md'), 'r', encoding='utf-8')
+            pageTitle = f.readline()
+            pageTitle = pageTitle.replace('#', '')
+            content = f.read()
+            return render_template('content.html', **locals())
+        except:
+            # TODO: page not found message in flash
+            newPageName = name
+            newpage = True
+            return render_template('edit.html', **locals())
     else:
         pass
 

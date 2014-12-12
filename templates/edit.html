@@ -1,12 +1,22 @@
 {% extends "layout.html" %}
 {% block body %}
+{% if newpage %}
+<h1>Creat page</h1>
+{% else %}
 <h1>Edit</h1>
+{% endif %}
 <hr>
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
-  <li><a href="#preview" data-toggle="tab">Preveiw</a></li>
-</ul>
-<form action="{{ url_for('add_entry', name=request.path[:-5]) }}" method="post" class="form-vertical" accept-charset="UTF-8">
+<form action="{{ url_for('add_entry', name=request.path) }}" method="post" class="form-vertical" accept-charset="UTF-8">
+    {% if newpage %}
+    <div class="form-group">
+        <label>Page name:</label>
+        <input type="text" size=30 name="pagename" class="form-control" value="{{ newPageName }}"></input>
+    </div>
+    {% endif %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
+        <li><a href="#preview" data-toggle="tab">Preveiw</a></li>
+    </ul>
     <fieldset>
         <div class="tab-content" style="margin-top:10px">
             <div class="tab-pane active form-group" id="edit">
