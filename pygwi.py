@@ -145,10 +145,7 @@ def add_entry(name):
     commitMessage = 'Update: '+name
     if name == 'new':
         name = request.form.get('pagename')
-        # name = secure_filename(name)
         name = name.replace('../', '')
-        # TODO: safe file name
-        # TODO: dose not create directory
         commitMessage = 'Create: '+name
 
     # TODO: Add commit message form
@@ -183,7 +180,7 @@ def historyView(name):
 @app.route('/<path:name>/diff', methods=['POST'])
 def diffView(name):
     # TODO: uft8
-    # TODO: page name
+    # TODO: show page name
     pageList = pagelist()
     updateList = commitList()
     import difflib
@@ -203,9 +200,13 @@ def diffView(name):
     # TODO: single diff
 
 
+@app.route('/<path:name>/delete')
+def deletePage(name):
+    pass
+
+
 @app.route('/upload', methods=['POST'])
 def upldfile():
-    # TODO: multi byte filename
     updir = os.path.join(path, uploadDir)
     if not os.path.isdir(updir):
         os.makedirs(updir)
@@ -214,7 +215,6 @@ def upldfile():
         print files.filename
         if files and allowed_file(files.filename):
             print files.filename
-            # filename = secure_filename(files.filename)
             filename = files.filename.replace('../', '')
             print filename
             app.logger.info('FileName: ' + filename)
@@ -240,17 +240,20 @@ def contentView(name):
         pageTitle = pageTitle.replace('#', '')
         content = f.read()
         # TODO: Create new page when page not found
-        # TODO: image max width
-        # TODO: checkbox
-        return render_template('index.html', **locals())
+        return render_template('content.html', **locals())
     else:
         pass
 
 # TODO: Add Delete button
 # TODO: Login and logout page and session
-# TODO: upload file page
-# TODO: delete button in upload file page
+# TODO: upload file list page
+# TODO: delete button in uploaded file
 # TODO: Add flash message
+
+# TODO: Custom markdown
+    # TODO: image max width
+    # TODO: checkbox
+
 
 if __name__ == '__main__':
     args = docopt(__doc__, version='1.0.0')
