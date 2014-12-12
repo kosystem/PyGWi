@@ -20,6 +20,7 @@ from flask import (
     redirect,
     url_for,
     request,
+    send_from_directory,
     jsonify
     )
 from flask.ext.misaka import Misaka
@@ -77,6 +78,7 @@ def pagelist():
 
 def commit(repo, filename, message):
     # commit
+    # TODO: edit commit author
     filename = filename.encode('utf-8')
     repo.index.add([filename])
     if repo.index.diff(None, paths=filename, staged=True):
@@ -180,6 +182,8 @@ def historyView(name):
 
 @app.route('/<path:name>/diff', methods=['POST'])
 def diffView(name):
+    # TODO: uft8
+    # TODO: page name
     pageList = pagelist()
     updateList = commitList()
     import difflib
@@ -220,6 +224,12 @@ def upldfile():
             return jsonify(name=filename, size=file_size)
 
 
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    updir = os.path.join(path, uploadDir)
+    return send_from_directory(updir, filename)
+
+
 @app.route('/<path:name>')
 def contentView(name):
     pageList = pagelist()
@@ -230,6 +240,8 @@ def contentView(name):
         pageTitle = pageTitle.replace('#', '')
         content = f.read()
         # TODO: Create new page when page not found
+        # TODO: image max width
+        # TODO: checkbox
         return render_template('index.html', **locals())
     else:
         pass
