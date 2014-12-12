@@ -3,6 +3,7 @@
 <form action="{{ url_for('diffView', name=request.path[:-8]) }}" method="post" class="diff-view">
     <fieldset>
         <legend>History</legend>
+        <button type="submit" class="btn btn-primary">Diff</button>
         <table class="table">
             <thead>
                 <tr>
@@ -29,7 +30,6 @@
             {% endfor %}
             </tbody>
         </table>
-        <button type="submit" class="btn btn-primary">Diff</button>
     </fieldset>
 </form>
 {% endblock %}

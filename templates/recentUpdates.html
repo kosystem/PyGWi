@@ -1,12 +1,14 @@
-<div class="accordion" id="resentUpdates">
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                Recent updates
-            </a>
+<div class="panel-group" id="resentUpdates">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                    Recent updates
+                </a>
+            </h4>
         </div>
-        <div id="collapseTwo" class="accordion-body collapse in">
-            <div class="accordion-inner" >
+        <div id="collapseTwo" class="panel-collapse collapse in">
+            <div class="panel-body" >
                 <ul style="list-style-position: outside">
                     {% for i in range(10) %}
                     {% set commit = updateList[i] %}
