@@ -271,16 +271,21 @@ def contentView(name):
     else:
         pass
 
-# TODO: Add Delete button
 # TODO: Login and logout page and session
 # TODO: upload file list page
 # TODO: delete button in uploaded file
 # TODO: Add flash message
+# TODO: Link update to page
+# TODO: update time in view content
 
 # TODO: Custom markdown
     # TODO: image max width
     # TODO: checkbox
 
+# TODO: config file
+    # TODO: navibar link
+    # TODO: sidemenu
+    # TODO: user manegemant
 
 if __name__ == '__main__':
     args = docopt(__doc__, version='1.0.0')
