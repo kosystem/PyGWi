@@ -80,7 +80,6 @@ def commit(repo, filename, message):
     # commit
     # TODO: edit commit author
     filename = filename.encode('utf-8')
-    repo.index.add([filename])
     if repo.index.diff(None, paths=filename, staged=True):
         try:
             repo.index.commit(message)
@@ -88,6 +87,16 @@ def commit(repo, filename, message):
             print 'Encode error'
     else:
         pass
+
+
+def add_commit(repo, filename, message):
+    repo.index.add([filename.encode('utf-8')])
+    commit(repo, filename, message)
+
+
+def remove_commit(repo, filename, message):
+    repo.index.remove([filename.encode('utf-8')])
+    commit(repo, filename, message)
 
 
 def commitList(filename=None):
@@ -167,7 +176,7 @@ def add_entry(name):
     f.write(text)
     f.close()
     # git commit --------
-    commit(repo, filename, commitMessage)
+    add_commit(repo, filename, commitMessage)
     return redirect(url_for('contentView', name=name))
 
 
@@ -205,7 +214,17 @@ def diffView(name):
 
 @app.route('/<path:name>/delete')
 def deletePage(name):
-    pass
+    filename = name+'.md'
+    fullpath = os.path.join(path, filename)
+    try:
+        commitMessage = 'Delete: '+name
+        remove_commit(repo, filename, commitMessage)
+        os.remove(fullpath)
+    except:
+        pass
+        # TODO: error message
+    # git commit --------
+    return redirect('/')
 
 
 @app.route('/upload', methods=['POST'])
@@ -222,7 +241,7 @@ def upldfile():
             print filename
             app.logger.info('FileName: ' + filename)
             files.save(os.path.join(updir, filename))
-            commit(repo, os.path.join(uploadDir, filename), 'Upload: %s' % filename)
+            add_commit(repo, os.path.join(uploadDir, filename), 'Upload: %s' % filename)
             file_size = os.path.getsize(os.path.join(updir, filename))
             return jsonify(name=filename, size=file_size)
 
