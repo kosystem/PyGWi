@@ -60,7 +60,8 @@ app.config['ALLOWED_EXTENSIONS'] = set([
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+           filename.rsplit('.', 1)[1].lower() in \
+           app.config['ALLOWED_EXTENSIONS']
 
 
 def asctime(date):
@@ -241,7 +242,10 @@ def upldfile():
             print filename
             app.logger.info('FileName: ' + filename)
             files.save(os.path.join(updir, filename))
-            add_commit(repo, os.path.join(uploadDir, filename), 'Upload: %s' % filename)
+            add_commit(
+                repo,
+                os.path.join(uploadDir, filename),
+                'Upload: %s' % filename)
             file_size = os.path.getsize(os.path.join(updir, filename))
             return jsonify(name=filename, size=file_size)
 
@@ -258,7 +262,10 @@ def contentView(name):
     updateList = commitList()
     if os.path.splitext(name)[1] != '.ico':
         try:
-            f = codecs.open(os.path.join(path, name+'.md'), 'r', encoding='utf-8')
+            f = codecs.open(
+                os.path.join(path, name+'.md'),
+                'r',
+                encoding='utf-8')
             pageTitle = f.readline()
             pageTitle = pageTitle.replace('#', '')
             content = f.read()
