@@ -24,27 +24,45 @@ from flask import (
     send_from_directory,
     jsonify
     )
-from flask.ext.misaka import Misaka
 
+import misaka
 import os
 from docopt import docopt
 import git
 import time
 import codecs
 
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import HtmlFormatter
+import houdini as h
 
-md = Misaka(autolink=True,
-            fenced_code=True,
-            lax_html=True,
-            no_intra_emphasis=True,
-            tables=True,
-            strikethrough=True,
-            # render flags
-            toc=True,
-            xhtml=True,
-            wrap=True)
+
+class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
+    def block_code(self, text, lang):
+        if not lang:
+            return ('\n<pre><code>%s</code></pre>\n'
+                    % h.escape_html(text.strip()))
+        lexer = get_lexer_by_name(lang, stripall=True)
+        formatter = HtmlFormatter()
+        return highlight(text, lexer, formatter)
+
+
+misaka_ext = (misaka.EXT_AUTOLINK |
+              misaka.EXT_FENCED_CODE |
+              misaka.EXT_LAX_HTML_BLOCKS |
+              misaka.EXT_NO_INTRA_EMPHASIS |
+              # misaka.EXT_SPACE_HEADERS |
+              misaka.EXT_STRIKETHROUGH |
+              misaka.EXT_SUPERSCRIPT |
+              misaka.EXT_TABLES)
+
+misaka_flags = (misaka.HTML_USE_XHTML |
+                misaka.HTML_TOC |
+                # misaka.HTML_TOC_TREE |
+                misaka.HTML_HARD_WRAP)
+
 app = Flask(__name__)
-md.init_app(app)
 
 path = '.'
 repo = 0
@@ -212,6 +230,9 @@ def diffView(name):
             tofile=sha1[1]):
         content += buf + '\n'
     content += '```'
+    rndr = BleepRenderer(flags=misaka_flags)
+    md = misaka.Markdown(rndr, extensions=misaka_ext)
+    content = md.render(content)
     return render_template('diff.html', **locals())
     # TODO: single diff
 
@@ -271,7 +292,11 @@ def contentView(name):
                 encoding='utf-8')
             pageTitle = f.readline()
             pageTitle = pageTitle.replace('#', '')
-            content = f.read()
+            text = f.read()
+            rndr = BleepRenderer(flags=misaka_flags)
+            md = misaka.Markdown(rndr, extensions=misaka_ext)
+            content = md.render(text)
+            toc = misaka.html(text, misaka_ext, misaka.HTML_TOC_TREE)
             return render_template('content.html', **locals())
         except:
             # TODO: page not found message in flash

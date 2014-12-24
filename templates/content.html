@@ -25,7 +25,9 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <hr>
+{% if toc %}
 <div class="alert alert-info" style="float:right;margin-left:3px">{{ toc|safe }}</div>
+{% endif %}
 {{ content|safe }}
 {% endblock %}
 
