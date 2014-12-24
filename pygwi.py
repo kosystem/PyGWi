@@ -6,7 +6,8 @@ Usage:
     manage.py [options] <repositoryDir>
 
 Options:
-    -a, --all                  do not ignore entries starting with .
+    -a, --all                   do not ignore entries starting with .
+    -p <PORT>, --port=PORT      port number [default: 5000]
 
 Othres:
         --help      display this help and exit
@@ -286,6 +287,7 @@ def contentView(name):
 # TODO: update time in view content
 
 # TODO: Custom markdown
+    # TODO: without flask-misaka
     # TODO: image max width
     # TODO: checkbox
 
@@ -300,5 +302,8 @@ if __name__ == '__main__':
         path = args['<repositoryDir>']
     repo = git.Repo(path)
 
+    if args['--port']:
+        port = int(args['--port'])
+
     # app.run(debug=True)
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)
