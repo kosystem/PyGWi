@@ -25,6 +25,7 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <hr>
-{{ content|markdown }}
+<div class="alert alert-info" style="float:right;margin-left:3px">{{ toc|safe }}</div>
+{{ content|safe }}
 {% endblock %}
 
