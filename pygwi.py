@@ -312,8 +312,6 @@ def contentView(name):
 # TODO: update time in view content
 
 # TODO: Custom markdown
-    # TODO: without flask-misaka
-    # TODO: image max width
     # TODO: checkbox
 
 # TODO: config file

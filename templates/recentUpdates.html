@@ -9,7 +9,7 @@
         </div>
         <div id="collapseTwo" class="panel-collapse collapse in">
             <div class="panel-body" >
-                <ul style="list-style-position: outside">
+                <ul style="padding-left: 20px;">
                     {% for i in range(10) %}
                     {% set commit = updateList[i] %}
                     <li>{{ commit['date'] }}<br> {{ commit['message'] }} by {{ commit['author'] }}</li>
