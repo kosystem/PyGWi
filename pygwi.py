@@ -133,6 +133,8 @@ def index():
 def newView():
     pageList = pagelist()
     updateList = commitList()
+    if request.args.get('pageName'):
+        newPageName = request.args.get('pageName')
     newpage = True
     return render_template('edit.html', **locals())
 
@@ -273,11 +275,9 @@ def contentView(name):
             return render_template('content.html', **locals())
         except:
             # TODO: page not found message in flash
-            newPageName = name
-            newpage = True
-            return render_template('edit.html', **locals())
+            return redirect(url_for('newView', pageName=name))
     else:
-        pass
+        return 0
 
 # TODO: Login and logout page and session
 # TODO: upload file list page
