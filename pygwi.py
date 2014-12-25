@@ -253,6 +253,16 @@ def deletePage(name):
     return redirect('/')
 
 
+@app.route('/preview', methods=['POST'])
+def preview():
+    text = request.json
+    text = text.replace('\r\n', '\n')
+    rndr = BleepRenderer(flags=misaka_flags)
+    md = misaka.Markdown(rndr, extensions=misaka_ext)
+    content = md.render(text)
+    return jsonify(preview=content)
+
+
 @app.route('/upload', methods=['POST'])
 def upldfile():
     updir = os.path.join(path, uploadDir)
