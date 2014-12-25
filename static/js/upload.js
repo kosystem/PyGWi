@@ -23,8 +23,8 @@ $(function() {
             alert('error!');
         });
     });
-    $('#previewButton').click(function() {
-        event.preventDefault();
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        (event.preventDefault) ? event.preventDefault():event.returnValue=false;
         var json = JSON.stringify($('#text').val());
         $.ajax({
             type: 'POST',
