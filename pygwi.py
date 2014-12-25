@@ -64,6 +64,7 @@ misaka_flags = (misaka.HTML_USE_XHTML |
                 misaka.HTML_HARD_WRAP)
 
 app = Flask(__name__)
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 path = '.'
 repo = 0

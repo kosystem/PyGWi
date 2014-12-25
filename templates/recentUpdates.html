@@ -10,8 +10,11 @@
         <div id="collapseTwo" class="panel-collapse collapse in">
             <div class="panel-body" >
                 <ul style="padding-left: 20px;">
-                    {% for i in range(10) %}
-                    {% set commit = updateList[i] %}
+                    {% for i in updateList %}
+                    {% if loop.index > 10 %}
+                    {% break %}
+                    {% endif %}
+                    {% set commit = i %}
                     <li>{{ commit['date'] }}<br> {{ commit['message'] }} by {{ commit['author'] }}</li>
                     {% endfor %}
                 </ul>
