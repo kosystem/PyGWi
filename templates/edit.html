@@ -1,11 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
+{#
 {% if newpage %}
 <h1>Creat page</h1>
 {% else %}
 <h1>Edit</h1>
 {% endif %}
-<hr>
+#}
 <form action="{{ url_for('add_entry', name=request.path) }}" method="post" class="form-vertical" accept-charset="UTF-8">
     {% if newpage %}
     <div class="form-group">
