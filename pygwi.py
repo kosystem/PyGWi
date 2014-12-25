@@ -7,6 +7,7 @@ Usage:
 
 Options:
     -a, --all                   do not ignore entries starting with .
+    -d, --debug                 debug mode
     -p <PORT>, --port=PORT      port number [default: 5000]
 
 Othres:
@@ -329,4 +330,4 @@ if __name__ == '__main__':
         port = int(args['--port'])
 
     # app.run(debug=True)
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=args['--debug'])
