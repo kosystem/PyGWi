@@ -40,6 +40,15 @@ import houdini as h
 
 
 class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
+    def list(self, text, is_ordered):
+        if '[ ] ' in text and '[x] ' in text:
+            text = text.replace('[ ]', '<input type="checkbox" disabled>')
+            text = text.replace('[x]', '<input type="checkbox" checked disabled>')
+            text = '\n<ul class="check-list">\n%s</ul>\n' % text
+        else:
+            text = '\n<ul>\n%s</ul>\n' % text
+        return text
+
     def block_code(self, text, lang):
         if not lang:
             return ('\n<pre><code>%s</code></pre>\n'
@@ -326,7 +335,6 @@ def contentView(name):
 # TODO: add title h1 in preview page
 
 # TODO: Custom markdown
-    # TODO: checkbox
 
 # TODO: config file
     # TODO: navibar link
