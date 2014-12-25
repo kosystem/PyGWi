@@ -166,7 +166,6 @@ def editView(name):
         os.path.join(path, name+'.md'),
         'r',
         encoding='utf-8').read()
-    # TODO: Preveiw page
     # TODO: cancel button
     # TODO: noticfy trantison page
     newpage = False
@@ -321,6 +320,8 @@ def contentView(name):
 # TODO: Add flash message
 # TODO: Link update to page
 # TODO: update time in view content
+# TODO: recent update count over flow
+# TODO: Add arrow in acordion menu
 
 # TODO: Custom markdown
     # TODO: checkbox
@@ -339,5 +340,4 @@ if __name__ == '__main__':
     if args['--port']:
         port = int(args['--port'])
 
-    # app.run(debug=True)
     app.run(host='0.0.0.0', port=port, debug=args['--debug'])

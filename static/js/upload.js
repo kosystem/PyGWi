@@ -3,7 +3,7 @@ $(function() {
           $('#file').trigger('click');
     });
     $('#file').change(function() {
-        event.preventDefault();
+        (event.preventDefault) ? event.preventDefault():event.returnValue=false;
         var form_data = new FormData($('#uploadform')[0]);
         $.ajax({
             type: 'POST',
@@ -13,10 +13,10 @@ $(function() {
             processData: false,
             dataType: 'json'
         }).done(function(data, textStatus, jqXHR){
-            console.log(data);
-            console.log(textStatus);
-            console.log(jqXHR);
-            console.log('Success!');
+            //console.log(data);
+            //console.log(textStatus);
+            //console.log(jqXHR);
+            //console.log('Success!');
             $("#resultFilename").text(data['name']);
             $("#resultFilesize").text(data['size']);
         }).fail(function(data){
@@ -33,8 +33,8 @@ $(function() {
             contentType: 'application/json',
             dataType: 'json',
         }).done(function(data){
-            console.log('Success!');
-            console.log(data.preview);
+            //console.log('Success!');
+            //console.log(data.preview);
             $("#preview").html(data.preview);
         });
     });
