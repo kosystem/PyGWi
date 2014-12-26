@@ -37,6 +37,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 import houdini as h
+import subprocess
 
 
 class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
@@ -53,6 +54,8 @@ class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
         if not lang:
             return ('\n<pre><code>%s</code></pre>\n'
                     % h.escape_html(text.strip()))
+        elif lang == 'blockdiag':
+            return generatoBlockdiag(text)
         lexer = get_lexer_by_name(lang, stripall=True)
         formatter = HtmlFormatter()
         return highlight(text, lexer, formatter)
@@ -78,6 +81,7 @@ app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 path = '.'
 repo = 0
 uploadDir = 'uploads'
+diagramDir = 'diagrams'
 
 app.config['ALLOWED_EXTENSIONS'] = set([
     'txt',
@@ -85,7 +89,8 @@ app.config['ALLOWED_EXTENSIONS'] = set([
     'png',
     'jpg',
     'jpeg',
-    'gif'])
+    'gif',
+    'svg'])
 
 
 def allowed_file(filename):
@@ -151,6 +156,26 @@ def commitList(filename=None):
         #  l = list(di2.iter_change_type('A'))
         # l[0].b_blob.name
     return commits
+
+
+def generatoBlockdiag(text):
+    # TODO: create uniqu filename
+    # TODO: remove old images
+    import random
+    filename = 'diagram.diag'
+    fullpath = os.path.join(path, diagramDir, filename)
+    diagdir = os.path.join(path, diagramDir)
+    if not os.path.isdir(diagdir):
+        os.makedirs(diagdir)
+    f = open(fullpath, 'w')
+    f.write(text.encode('utf-8'))
+    f.close()
+    cmd = 'blockdiag %s' % fullpath
+    if subprocess.call(cmd, shell=True):
+        print 'Error'
+    return '<img src="%s?%d" />' %\
+        (os.path.join('/', diagramDir, 'diagram.png'),
+         random.randint(0, 999))
 
 
 @app.route('/')
@@ -297,6 +322,12 @@ def upldfile():
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     updir = os.path.join(path, uploadDir)
+    return send_from_directory(updir, filename)
+
+
+@app.route('/diagrams/<filename>')
+def diagram_file(filename):
+    updir = os.path.join(path, diagramDir)
     return send_from_directory(updir, filename)
 
 
