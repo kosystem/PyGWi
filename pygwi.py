@@ -341,7 +341,6 @@ def contentView(name):
     # TODO: Search to all content
     # TODO: Tag
     # TODO: date time --> flask filter
-    # TODO: show arate when leave edit page
     # TODO: save conteniu button in edit page
 
 # TODO: Custom markdown

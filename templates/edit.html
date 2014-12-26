@@ -35,4 +35,17 @@
 </form>
 <p>Result Filename:&nbsp;<span id="resultFilename"> here</span></p>
 <p>Result Filesize:&nbsp;<span id="resultFilesize">here</span></p>
+<script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+<script type="text/javascript">
+$(function(){
+    $("#text").keyup(function() {
+        $(window).on('beforeunload', function() {
+            return 'Changes are not saved';
+        });
+    });
+    $("button[type=submit]").click(function() {
+        $(window).off('beforeunload');
+    });
+});
+</script>
 {% endblock %}
