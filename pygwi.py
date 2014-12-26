@@ -330,7 +330,6 @@ def contentView(name):
     # TODO: show latest update time
     # TODO: add title h1 in preview page
     # TODO: Recentupdate menu style
-    # TODO: font-family
     # TODO: favicon
     # TODO: preveiw uploaded image thumnal
 
@@ -343,6 +342,7 @@ def contentView(name):
     # TODO: Tag
     # TODO: date time --> flask filter
     # TODO: show arate when leave edit page
+    # TODO: save conteniu button in edit page
 
 # TODO: Custom markdown
 
