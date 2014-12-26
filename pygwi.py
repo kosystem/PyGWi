@@ -324,15 +324,25 @@ def contentView(name):
     else:
         return 0
 
-# TODO: Login and logout page and session
-# TODO: upload file list page
-# TODO: delete button in uploaded file
-# TODO: Add flash message
-# TODO: Link update to page
-# TODO: update time in view content
-# TODO: recent update count over flow
-# TODO: Add arrow in acordion menu
-# TODO: add title h1 in preview page
+# TODO: View
+    # TODO: upload file list page
+    # TODO: Add flash message
+    # TODO: show latest update time
+    # TODO: add title h1 in preview page
+    # TODO: Recentupdate menu style
+    # TODO: font-family
+    # TODO: favicon
+    # TODO: preveiw uploaded image thumnal
+
+# TODO: System
+    # TODO: Login and logout page and session
+    # TODO: delete button in uploaded file
+    # TODO: Link recent update to page
+    # TODO: Create init git repository
+    # TODO: Search to all content
+    # TODO: Tag
+    # TODO: date time --> flask filter
+    # TODO: show arate when leave edit page
 
 # TODO: Custom markdown
 
