@@ -160,7 +160,7 @@ def generatoBlockdiag(text):
     f = open(fullpath, 'w')
     f.write(text.encode('utf-8'))
     f.close()
-    cmd = 'blockdiag %s' % fullpath
+    cmd = 'blockdiag --antialias %s' % fullpath
     if subprocess.call(cmd, shell=True):
         print 'Error'
     return '<img src="%s?%d" />' %\
