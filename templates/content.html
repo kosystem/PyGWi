@@ -1,10 +1,27 @@
 {% extends "layout.html" %}
 {% block body %}
-<H1 style="display:inline">{{ pageTitle }}</H1>
-<a data-toggle="modal" href="#deleteModal" class="btn btn-danger" style="float:right;margin-left:3px">Delete</a>
-<a class="btn btn-primary" href="{{ request.path+'/history' }}" role="button" style="float:right;margin-left:3px">History</a>
-<a class="btn btn-primary" href="{{ request.path+'/edit' }}" role="button" style="float:right;margin-left:3px">Edit</a>
-
+<div class="pageTitle" style="margin-bottom: 30px;" >
+    <H1>{{ pageTitle }}</H1>
+    <div class="btn-group btn-group-xs">
+        <a class="btn btn-default" href="{{ request.path+'/edit' }}" role="button" >
+            <span class="glyphicon glyphicon-edit"></span> Edit
+        </a>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="{{ request.path+'/history' }}">
+                <span class="glyphicon glyphicon-list"></span> History
+            </a></li>
+            <li><a data-toggle="modal" href="#deleteModal">
+                <span class="glyphicon glyphicon-trash"></span> Delete
+            </a></li>
+        </ul>
+    </div>
+    <div style="float:right;margin-left:3px;">Last update 2014/12/25</div>
+    <div style="clear: both;"></div>
+    <!-- <hr style="margin-top: 5px;"> -->
+</div>
 
 <!-- モーダルの設定 -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -24,7 +41,6 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<hr>
 {% if toc %}
 <div class="alert alert-info toc" style="float:right;margin-left:3px">{{ toc|safe }}</div>
 {% endif %}
