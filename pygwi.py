@@ -99,10 +99,6 @@ def allowed_file(filename):
            app.config['ALLOWED_EXTENSIONS']
 
 
-def asctime(date):
-    return time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(date))
-
-
 def pagelist():
     lsfiles = repo.git().ls_files().splitlines()
     files = []
@@ -135,27 +131,21 @@ def remove_commit(repo, filename, message):
     commit(repo, filename, message)
 
 
+def do_datetime(dt, format='%Y-%m-%d @ %H:%M'):
+    formatted = ''
+    if dt is not None:
+        formatted = time.strftime(format, time.gmtime(dt))
+    return formatted
+
+app.jinja_env.filters['datetime'] = do_datetime
+
+
 def commitList(filename=None):
     iter_commits = repo.iter_commits(paths=filename)
-    commits = []
-    for c in iter_commits:
-        date = asctime(c.authored_date-c.author_tz_offset)
-        # TODO: Chnge to jinja2 filter
-        # (http://study-flask.readthedocs.org/ja/latest/07.html)
-        author = c.author.name
-        message = c.message
-        hexsha = c.hexsha
-        commit = {
-            'date': date,
-            'author': author,
-            'message': message,
-            'hexsha': hexsha
-            }
-        commits.append(commit)
-        # di2 = r.head.commit.parents[0].diff(r.head.commit)
-        #  l = list(di2.iter_change_type('A'))
-        # l[0].b_blob.name
-    return commits
+    return iter_commits
+    # di2 = r.head.commit.parents[0].diff(r.head.commit)
+    #  l = list(di2.iter_change_type('A'))
+    # l[0].b_blob.name
 
 
 def generatoBlockdiag(text):
