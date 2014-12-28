@@ -114,7 +114,8 @@ def commit(repo, filename, message):
     filename = filename.encode('utf-8')
     if repo.index.diff(None, paths=filename, staged=True):
         try:
-            repo.index.commit(message)
+            author = git.Actor('gest urser', 'e-m@il')
+            repo.index.commit(message, author=author)
         except UnicodeEncodeError:
             print 'Encode error'
     else:
