@@ -151,6 +151,7 @@ def commitList(filename=None):
 def generatoBlockdiag(text):
     # TODO: create uniqu filename
     # TODO: remove old images
+    # TODO: many image conflict
     import random
     filename = 'diagram.diag'
     fullpath = os.path.join(path, diagramDir, filename)
@@ -162,7 +163,7 @@ def generatoBlockdiag(text):
     f.close()
     cmd = 'blockdiag --antialias %s' % fullpath
     if subprocess.call(cmd, shell=True):
-        print 'Error'
+        print 'Error'  # TODO Error to flash
     return '<img src="%s?%d" />' %\
         (os.path.join('/', diagramDir, 'diagram.png'),
          random.randint(0, 999))
@@ -353,6 +354,7 @@ def contentView(name):
     # TODO: Recentupdate menu style
     # TODO: favicon
     # TODO: preveiw uploaded image thumnal
+    # TODO: show error of blockdiag
 
 # TODO: System
     # TODO: Login and logout page and session
