@@ -109,7 +109,6 @@ def pagelist():
 
 
 def commit(repo, filename, message):
-    # commit
     # TODO: edit commit author
     filename = filename.encode('utf-8')
     if repo.index.diff(None, paths=filename, staged=True):
@@ -150,11 +149,9 @@ def commitList(filename=None):
 
 
 def generatoBlockdiag(text):
-    # TODO: create uniqu filename
-    # TODO: remove old images
-    # TODO: many image conflict
     import random
-    filename = 'diagram.diag'
+    basename = '%d' % random.randint(0, 999)
+    filename = '%s.diag' % basename
     fullpath = os.path.join(path, diagramDir, filename)
     diagdir = os.path.join(path, diagramDir)
     if not os.path.isdir(diagdir):
@@ -165,8 +162,9 @@ def generatoBlockdiag(text):
     cmd = 'blockdiag --antialias %s' % fullpath
     if subprocess.call(cmd, shell=True):
         print 'Error'  # TODO Error to flash
+    os.remove(fullpath)
     return '<img src="%s?%d" />' %\
-        (os.path.join('/', diagramDir, 'diagram.png'),
+        (os.path.join('/', diagramDir, '%s.png' % basename),
          random.randint(0, 999))
 
 
@@ -347,6 +345,15 @@ def contentView(name):
     else:
         return 0
 
+
+@app.after_request
+def after_request(response):
+    dir, file = os.path.split(request.path)
+    if dir[1:] == diagramDir:
+        os.remove(os.path.join(path, diagramDir, file))
+        # print 'removed image'
+    return response
+
 # TODO: View
     # TODO: upload file list page
     # TODO: Add flash message
@@ -355,7 +362,6 @@ def contentView(name):
     # TODO: Recentupdate menu style
     # TODO: favicon
     # TODO: preveiw uploaded image thumnal
-    # TODO: show error of blockdiag
 
 # TODO: System
     # TODO: Login and logout page and session
@@ -364,7 +370,6 @@ def contentView(name):
     # TODO: Create init git repository
     # TODO: Search to all content
     # TODO: Tag
-    # TODO: date time --> flask filter
     # TODO: save conteniu button in edit page
 
 # TODO: Custom markdown
