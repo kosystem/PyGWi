@@ -108,7 +108,8 @@ def pagelist():
     files = []
     for f in lsfiles:
         pagename = f.replace('.md', '').decode('utf-8')
-        files.append(pagename)
+        if not pagename.startswith(uploadDir):
+            files.append(pagename)
     return files
 
 
