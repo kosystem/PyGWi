@@ -109,12 +109,12 @@ def pagelist():
 
 
 def commit(repo, filename, message):
-    # commit
     # TODO: edit commit author
     filename = filename.encode('utf-8')
     if repo.index.diff(None, paths=filename, staged=True):
         try:
-            repo.index.commit(message)
+            author = git.Actor('gest urser', 'e-m@il')
+            repo.index.commit(message, author=author)
         except UnicodeEncodeError:
             print 'Encode error'
     else:
@@ -149,10 +149,9 @@ def commitList(filename=None):
 
 
 def generatoBlockdiag(text):
-    # TODO: create uniqu filename
-    # TODO: remove old images
     import random
-    filename = 'diagram.diag'
+    basename = '%d' % random.randint(0, 999)
+    filename = '%s.diag' % basename
     fullpath = os.path.join(path, diagramDir, filename)
     diagdir = os.path.join(path, diagramDir)
     if not os.path.isdir(diagdir):
@@ -160,11 +159,12 @@ def generatoBlockdiag(text):
     f = open(fullpath, 'w')
     f.write(text.encode('utf-8'))
     f.close()
-    cmd = 'blockdiag %s' % fullpath
+    cmd = 'blockdiag --antialias %s' % fullpath
     if subprocess.call(cmd, shell=True):
-        print 'Error'
+        print 'Error'  # TODO Error to flash
+    os.remove(fullpath)
     return '<img src="%s?%d" />' %\
-        (os.path.join('/', diagramDir, 'diagram.png'),
+        (os.path.join('/', diagramDir, '%s.png' % basename),
          random.randint(0, 999))
 
 
@@ -344,6 +344,15 @@ def contentView(name):
             return redirect(url_for('newView', pageName=name))
     else:
         return 0
+
+
+@app.after_request
+def after_request(response):
+    dir, file = os.path.split(request.path)
+    if dir[1:] == diagramDir:
+        os.remove(os.path.join(path, diagramDir, file))
+        # print 'removed image'
+    return response
 
 # TODO: View
     # TODO: upload file list page
