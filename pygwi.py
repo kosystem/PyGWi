@@ -361,7 +361,6 @@ def contentView(name):
     # TODO: Create init git repository
     # TODO: Search to all content
     # TODO: Tag
-    # TODO: date time --> flask filter
     # TODO: save conteniu button in edit page
 
 # TODO: Custom markdown
