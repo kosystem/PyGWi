@@ -153,7 +153,24 @@ app.jinja_env.filters['datetime'] = do_datetime
 
 def commitList(filename=None):
     iter_commits = repo.iter_commits(paths=filename)
-    return iter_commits
+    commit_list = list(iter_commits)
+    commits = []
+    for i, commit in enumerate(commit_list):
+        if i >= len(commit_list) - 2:
+            break
+        log = repo.git().log(['--name-status', '--oneline', '-C', 'HEAD~%d..HEAD~%d' % (i+1, i)])
+        com = {}
+        com['authored_date'] = commit.authored_date
+        com['author_tz_offset'] = commit.author_tz_offset
+        com['author'] = commit.author
+        com['message'] = commit.message
+        com['hexsha'] = commit.hexsha
+        com['filename'] = log.split('\n')[1].split()[1].decode('utf-8')
+        if com['filename'].endswith('.md'):
+            com['filename'] = com['filename'][:-3]
+
+        commits.append(com)
+    return commits
     # di2 = r.head.commit.parents[0].diff(r.head.commit)
     #  l = list(di2.iter_change_type('A'))
     # l[0].b_blob.name

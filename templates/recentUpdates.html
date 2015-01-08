@@ -10,13 +10,13 @@
         <div id="collapseTwo" class="panel-collapse collapse in">
             <div class="panel-body" >
                 <ul style="padding-left: 20px;">
-                    {% for i in updateList %}
+                    {% for commit in updateList %}
                     {% if loop.index > 10 %}
                     {% break %}
                     {% endif %}
-                    {% set commit = i %}
                     {% set commit_date =  commit['authored_date'] - commit['author_tz_offset'] %}
-                    <li>{{commit_date | datetime('%Y/%m/%d %H:%M') }}<br> {{ commit['message'] }}</li>
+                    <li>{{commit_date | datetime('%Y/%m/%d %H:%M') }}<br>
+                    <a href="/{{ commit['filename'] }}">{{ commit['filename'] }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
