@@ -16,7 +16,7 @@
                     {% endif %}
                     {% set commit = i %}
                     {% set commit_date =  commit['authored_date'] - commit['author_tz_offset'] %}
-                    <li>{{commit_date | datetime('%Y/%m/%d %H:%M') }}<br> {{ commit['message'] }} by {{ commit['author'] }}</li>
+                    <li>{{commit_date | datetime('%Y/%m/%d %H:%M') }}<br> {{ commit['message'] }}</li>
                     {% endfor %}
                 </ul>
             </div>

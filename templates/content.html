@@ -13,6 +13,9 @@
             <li><a href="{{ request.path+'/history' }}">
                 <span class="glyphicon glyphicon-list"></span> History
             </a></li>
+            <li><a href="{{ request.path+'/rename' }}">
+                <span class="glyphicon glyphicon-font"></span> Rename
+            </a></li>
             <li><a data-toggle="modal" href="#deleteModal">
                 <span class="glyphicon glyphicon-trash"></span> Delete
             </a></li>
@@ -24,6 +27,7 @@
 </div>
 
 <!-- モーダルの設定 -->
+<!-- DeleteModal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

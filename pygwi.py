@@ -63,6 +63,7 @@ class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
         lexer = get_lexer_by_name(lang, stripall=True)
         formatter = HtmlFormatter()
         return highlight(text, lexer, formatter)
+    # <span style="background-color:#ffcc99">背景色<span>
 
 
 misaka_ext = (misaka.EXT_AUTOLINK |
@@ -136,6 +137,11 @@ def remove_commit(repo, filename, message):
     commit(repo, filename, message)
 
 
+def move_commit(repo, src, dist, message):
+    repo.index.move([src, dist])
+    commit(repo, src, message)
+
+
 def do_datetime(dt, format='%Y-%m-%d @ %H:%M'):
     formatted = ''
     if dt is not None:
@@ -151,6 +157,7 @@ def commitList(filename=None):
     # di2 = r.head.commit.parents[0].diff(r.head.commit)
     #  l = list(di2.iter_change_type('A'))
     # l[0].b_blob.name
+    # git log --name-status --oneline -C HEAD~n..HEAD
 
 
 def generatoBlockdiag(text):
