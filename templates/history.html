@@ -8,8 +8,8 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Comment</th>
                     <th>Date</th>
+                    <th>Comment</th>
                     <th>Autor</th>
                     <th>SHA-1</th>
                 </tr>
@@ -18,8 +18,9 @@
             {% for commit in commits %}
             <tr>
                 <td><input type="checkbox" name="sha-1" value="{{ commit['hexsha'] }}"></td>
+                {% set commit_date =  commit['authored_date'] - commit['author_tz_offset'] %}
+                <td>{{commit_date | datetime('%Y/%m/%d %H:%M') }}</td>
                 <td>{{ commit['message'] }}</td>
-                <td>{{ commit['date'] }}</td>
                 <td>{{ commit['author'] }}</td>
                 <td>{{ commit['hexsha'][:6] }}</td>
             </tr>
