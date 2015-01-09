@@ -158,23 +158,29 @@ def commitList(filename=None):
     for i, commit in enumerate(commit_list):
         if i >= len(commit_list) - 2:
             break
-        log = repo.git().log(['--name-status', '--oneline', '-C', 'HEAD~%d..HEAD~%d' % (i+1, i)])
+        log = repo.git().log([
+            '--name-status',
+            '--oneline', '-C',
+            'HEAD~%d..HEAD~%d' % (i+1, i)])
         com = {}
         com['authored_date'] = commit.authored_date
         com['author_tz_offset'] = commit.author_tz_offset
         com['author'] = commit.author
         com['message'] = commit.message
         com['hexsha'] = commit.hexsha
+        if log.split('\n')[1].split()[0] == 'M':
+            com['type'] = 'Update'
+        elif log.split('\n')[1].split()[0] == 'A':
+            com['type'] = 'Create'
+        elif log.split('\n')[1].split()[0] == 'R100':
+            com['type'] = 'Rename'
+        else:
+            com['type'] = 'Unknow'
         com['filename'] = log.split('\n')[1].split()[1].decode('utf-8')
         if com['filename'].endswith('.md'):
             com['filename'] = com['filename'][:-3]
-
         commits.append(com)
     return commits
-    # di2 = r.head.commit.parents[0].diff(r.head.commit)
-    #  l = list(di2.iter_change_type('A'))
-    # l[0].b_blob.name
-    # git log --name-status --oneline -C HEAD~n..HEAD
 
 
 def generatoBlockdiag(text):
