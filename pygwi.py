@@ -226,7 +226,6 @@ def editView(name):
         os.path.join(path, name+'.md'),
         'r',
         encoding='utf-8').read()
-    # TODO: cancel button
     # TODO: noticfy trantison page
     newpage = False
     return render_template('edit.html', **locals())
@@ -394,18 +393,16 @@ def after_request(response):
     # TODO: Add flash message
     # TODO: show latest update time
     # TODO: add title h1 in preview page
-    # TODO: Recentupdate menu style
     # TODO: favicon
     # TODO: preveiw uploaded image thumnal
 
 # TODO: System
     # TODO: Login and logout page and session
     # TODO: delete button in uploaded file
-    # TODO: Link recent update to page
     # TODO: Create init git repository
     # TODO: Search to all content
     # TODO: Tag
-    # TODO: save conteniu button in edit page
+    # TODO: save conteniue button in edit page
     # TODO: Move page
 
 # TODO: Custom markdown
