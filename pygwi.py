@@ -65,6 +65,9 @@ class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
         return highlight(text, lexer, formatter)
     # <span style="background-color:#ffcc99">背景色<span>
 
+    def postprocess(self, text):
+        return text.replace('<table>', '<table class="table">')
+
 
 misaka_ext = (misaka.EXT_AUTOLINK |
               misaka.EXT_FENCED_CODE |
