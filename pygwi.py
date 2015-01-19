@@ -326,6 +326,7 @@ def preview():
 
 @app.route('/upload', methods=['POST'])
 def upldfile():
+    # FIXME: Dose not upload file from IE8
     updir = os.path.join(path, uploadDir)
     if not os.path.isdir(updir):
         os.makedirs(updir)
