@@ -360,12 +360,14 @@ def diagram_file(filename):
 
 @app.route('/<path:name>')
 def contentView(name):
+    import datetime
     pageList = pagelist()
     updateList = commitList()
     if os.path.splitext(name)[1] != '.ico':
         try:
+            fullpath = os.path.join(path, name+'.md')
             f = codecs.open(
-                os.path.join(path, name+'.md'),
+                fullpath,
                 'r',
                 encoding='utf-8')
             pageTitle = f.readline()
@@ -375,6 +377,10 @@ def contentView(name):
             md = misaka.Markdown(rndr, extensions=misaka_ext)
             content = md.render(text)
             toc = misaka.html(text, misaka_ext, misaka.HTML_TOC_TREE)
+
+            st_time = os.lstat(fullpath).st_mtime
+            date_time = datetime.datetime.fromtimestamp(st_time)
+            updateTime = date_time.strftime('%Y/%m/%d %H:%M')
             return render_template('content.html', **locals())
         except:
             # TODO: page not found message in flash
@@ -394,7 +400,6 @@ def after_request(response):
 # TODO: View
     # TODO: upload file list page
     # TODO: Add flash message
-    # TODO: show latest update time
     # TODO: add title h1 in preview page
     # TODO: favicon
     # TODO: preveiw uploaded image thumnal
