@@ -10,8 +10,18 @@
         <div id="collapseOne" class="panel-collapse collapse in">
             <div class="panel-body" >
                 <ul style="padding-left: 20px;">
+                    {% set path = "" %}
                     {% for page in pageList %}
+                    {% if "/" in page %}
+                    {% set current_path = page.split('/')[0] %}
+                    {% if path != current_path %}
+                    {% set path = current_path %}
+                    <li class="text-muted">{{ current_path }}</li>
+                    {% endif %}
+                    <ul><li><a href="/{{ page }}">{{ page.split('/')[-1] }}</a></li></ul>
+                    {% else %}
                     <li><a href="/{{ page }}">{{ page }}</a></li>
+                    {% endif %}
                     {% endfor %}
                 </ul>
             </div>
