@@ -42,7 +42,7 @@ import subprocess
 
 class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
     def list(self, text, is_ordered):
-        if '[ ] ' in text and '[x] ' in text:
+        if '[ ] ' in text or '[x] ' in text:
             text = text.replace(
                 '[ ]',
                 '<input type="checkbox" disabled>')
@@ -51,7 +51,10 @@ class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
                 '<input type="checkbox" checked disabled>')
             text = '\n<ul class="check-list">\n%s</ul>\n' % text
         else:
-            text = '\n<ul>\n%s</ul>\n' % text
+            if is_ordered:
+                text = '\n<ol>\n%s</ol>\n' % text
+            else:
+                text = '\n<ul>\n%s</ul>\n' % text
         return text
 
     def block_code(self, text, lang):
