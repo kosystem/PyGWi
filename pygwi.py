@@ -26,7 +26,7 @@ from flask import (
     jsonify
     )
 
-import misaka
+import mistune
 import os
 from docopt import docopt
 import git
@@ -36,11 +36,10 @@ import codecs
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
-import houdini as h
 import subprocess
 
 
-class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
+class MyRenderer(mistune.Renderer):
     def list(self, text, is_ordered):
         if '[ ] ' in text or '[x] ' in text:
             text = text.replace(
@@ -57,34 +56,20 @@ class BleepRenderer(misaka.HtmlRenderer, misaka.SmartyPants):
                 text = '\n<ul>\n%s</ul>\n' % text
         return text
 
-    def block_code(self, text, lang):
+    def block_code(self, code, lang):
         if not lang:
             return ('\n<pre><code>%s</code></pre>\n'
-                    % h.escape_html(text.strip()))
+                    % mistune.escape(code))
         elif lang == 'blockdiag':
-            return generatoBlockdiag(text)
+            return generatoBlockdiag(code)
         lexer = get_lexer_by_name(lang, stripall=True)
         formatter = HtmlFormatter()
-        return highlight(text, lexer, formatter)
+        return highlight(code, lexer, formatter)
     # <span style="background-color:#ffcc99">背景色<span>
 
     def postprocess(self, text):
         return text.replace('<table>', '<table class="table">')
 
-
-misaka_ext = (misaka.EXT_AUTOLINK |
-              misaka.EXT_FENCED_CODE |
-              misaka.EXT_LAX_HTML_BLOCKS |
-              misaka.EXT_NO_INTRA_EMPHASIS |
-              # misaka.EXT_SPACE_HEADERS |
-              misaka.EXT_STRIKETHROUGH |
-              misaka.EXT_SUPERSCRIPT |
-              misaka.EXT_TABLES)
-
-misaka_flags = (misaka.HTML_USE_XHTML |
-                misaka.HTML_TOC |
-                # misaka.HTML_TOC_TREE |
-                misaka.HTML_HARD_WRAP)
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
@@ -295,8 +280,8 @@ def diffView(name):
             tofile=sha1[1]):
         content += buf + '\n'
     content += '```'
-    rndr = BleepRenderer(flags=misaka_flags)
-    md = misaka.Markdown(rndr, extensions=misaka_ext)
+    renderer = MyRenderer()
+    md = mistune.Markdown(renderer=renderer)
     content = md.render(content)
     return render_template('diff.html', **locals())
     # TODO: single diff
@@ -321,8 +306,8 @@ def deletePage(name):
 def preview():
     text = request.json
     text = text.replace('\r\n', '\n')
-    rndr = BleepRenderer(flags=misaka_flags)
-    md = misaka.Markdown(rndr, extensions=misaka_ext)
+    renderer = MyRenderer()
+    md = mistune.Markdown(renderer=renderer)
     content = md.render(text)
     return jsonify(preview=content)
 
@@ -377,10 +362,10 @@ def contentView(name):
             pageTitle = f.readline()
             pageTitle = pageTitle.replace('#', '')
             text = f.read()
-            rndr = BleepRenderer(flags=misaka_flags)
-            md = misaka.Markdown(rndr, extensions=misaka_ext)
+            renderer = MyRenderer()
+            md = mistune.Markdown(renderer=renderer)
             content = md.render(text)
-            toc = misaka.html(text, misaka_ext, misaka.HTML_TOC_TREE)
+            # toc = misaka.html(text, misaka_ext, misaka.HTML_TOC_TREE)
 
             st_time = os.lstat(fullpath).st_mtime
             date_time = datetime.datetime.fromtimestamp(st_time)
